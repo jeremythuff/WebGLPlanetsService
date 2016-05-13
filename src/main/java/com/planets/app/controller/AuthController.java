@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.planets.app.model.AppUser;
 import com.planets.app.model.repo.AppUserRepo;
@@ -32,6 +33,7 @@ public class AuthController extends CoreAuthController {
 
 	@Override
 	@ApiMapping("/register")
+	@Transactional
 	public ApiResponse registration(String data, @Parameters Map<String, String[]> parameters) {
 		ApiResponse apiResponse = null;
 		
