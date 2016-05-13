@@ -97,7 +97,7 @@ public class AuthControllerTest extends AbstractControllerTest {
     	parameters.put("lastName", TEST_USER_1_LAST_NAME);
     	parameters.put("password", TEST_USER_1_PASSWORD);
     	
-		ApiResponse response = authController.register(parameters);
+		ApiResponse response = authController.registration("test", parameters);
 		
     	AppUser user = (AppUser) response.getPayload().get("AppUser");
     	
@@ -106,7 +106,7 @@ public class AuthControllerTest extends AbstractControllerTest {
     	assertEquals(TEST_USER_1_FIRST_NAME[0], user.getFirstName());
     	assertEquals(TEST_USER_1_LAST_NAME[0], user.getLastName());
     	assertEquals(TEST_USER_1_EMAIL[0], user.getEmail());
-    	assertEquals(TEST_USER_1_PASSWORD[0], user.getPassword());
+    	assertEquals(true, authUtility.validatePassword(TEST_USER_1_PASSWORD[0], user.getPassword()));
     }
 
 }
