@@ -87,4 +87,15 @@ public class AppUserRepoImpl implements AppUserRepoCustom {
 		em.remove(em.contains(user) ? user : em.merge(user));
 	}
 
+	@Override
+	public AppUser create(String email, String firstName, String lastName,
+			String password) {
+		
+		 AppUser user = appUserRepo.findByEmail(email);
+	        if (user == null) {
+	            return appUserRepo.save(new AppUser(email, firstName, lastName, password));
+	        }
+	        return user;
+	}
+
 }

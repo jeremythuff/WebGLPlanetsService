@@ -1,4 +1,6 @@
 /* 
+ * @Author Jeremy Huff
+ * 
  * UserController.java 
  * 
  * Version: 
