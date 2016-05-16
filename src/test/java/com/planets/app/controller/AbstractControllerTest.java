@@ -9,19 +9,14 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.planets.app.WebServerInit;
 
+import edu.tamu.framework.model.Credentials;
 import edu.tamu.framework.util.AuthUtility;
+import edu.tamu.framework.util.JwtUtility;
 
 @WebAppConfiguration
 @SpringApplicationConfiguration(classes = { WebServerInit.class })
 public abstract class AbstractControllerTest {
 
-	@Spy
-	protected ObjectMapper objectMapper;
 	
-	@Spy @InjectMocks
-	protected AuthUtility authUtility;
-	
-	@Spy
-	protected BCryptPasswordEncoder passwordEncoder;
 	
 }

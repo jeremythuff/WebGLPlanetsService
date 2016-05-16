@@ -9,6 +9,8 @@
  */
 package com.planets.app.config;
 
+import org.h2.server.web.WebServlet;
+import org.springframework.boot.context.embedded.ServletRegistrationBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
@@ -50,5 +52,13 @@ public class WebAppConfig extends CoreWebAppConfig {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(restInterceptor()).addPathPatterns("/**");
     }
+    
+    @Bean
+	public ServletRegistrationBean h2servletRegistration() {
+		ServletRegistrationBean registrationBean = new ServletRegistrationBean(new WebServlet());
+		registrationBean.addUrlMappings("/admin/h2console/*");
+		registrationBean.addInitParameter("-webAllowOthers", "true");
+		return registrationBean;
+	}
 
 }
