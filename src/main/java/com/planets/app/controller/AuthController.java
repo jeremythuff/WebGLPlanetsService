@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.planets.app.model.AppUser;
 import com.planets.app.model.repo.AppUserRepo;
 
@@ -31,50 +30,40 @@ public class AuthController extends CoreAuthController {
 	@Autowired
 	AppUserRepo appUserRepo;
 	
-
-	@Override
-	@ApiMapping("/login")
-    public ApiResponse login(@Data String data) {
-        
-        Map<String,String> dataMap = new HashMap<String,String>();      
-        try {
-            dataMap = objectMapper.readValue(data, new TypeReference<HashMap<String,String>>(){});
-        } catch (Exception e) {
-            e.printStackTrace();
-        }  
-        
-        String email = dataMap.get("email");
-        String password = dataMap.get("password");
-        
-        AppUser user = appUserRepo.findByEmail(email);
-        
-        if(user == null) {
-            logger.debug("No user found with email " + email + "!");
-            return new ApiResponse(ERROR, "No user found with email " + email + "!");
-        }
-        
-        if(!authUtility.validatePassword(password, user.getPassword())) {
-            logger.debug("Authentication failed!");
-            return new ApiResponse(ERROR, "Authentication failed!");
-        }
-        
-        try {
-        	Map<String, String> userMap = new HashMap<String, String>();
-        	userMap.put("lastName", user.getLastName());
-        	userMap.put("firstName", user.getFirstName());
-        	userMap.put("uin", String.valueOf(user.getUin()));
-        	userMap.put("email", user.getEmail());
-            return new ApiResponse(SUCCESS, jwtUtility.makeToken(userMap));
-        } catch (InvalidKeyException | JsonProcessingException | NoSuchAlgorithmException | IllegalStateException | UnsupportedEncodingException e) {
-            logger.debug("Unable to generate token!");
-            return new ApiResponse(ERROR, "Unable to generate token!");
-        }
-    }
-
-	@Override
+	@ApiMapping(value="/login", method=RequestMethod.POST)
+	public ApiResponse login(@Parameters Map<String, String[]> parameters) {
+		    
+	        String email = parameters.get("email")[0];
+	        String password = parameters.get("password")[0];
+	        
+	        AppUser user = appUserRepo.findByEmail(email);
+	        
+	        if(user == null) {
+	            logger.debug("No user found with email " + email + "!");
+	            return new ApiResponse(ERROR, "No user found with email " + email + "!");
+	        }
+	        
+	        if(!authUtility.validatePassword(password, user.getPassword())) {
+	            logger.debug("Authentication failed!");
+	            return new ApiResponse(ERROR, "Authentication failed!");
+	        }
+	        
+	        try {
+	        	Map<String, String> userMap = new HashMap<String, String>();
+	        	userMap.put("lastName", user.getLastName());
+	        	userMap.put("firstName", user.getFirstName());
+	        	userMap.put("uin", String.valueOf(user.getUin()));
+	        	userMap.put("email", user.getEmail());
+	            return new ApiResponse(SUCCESS, jwtUtility.makeToken(userMap));
+	        } catch (InvalidKeyException | JsonProcessingException | NoSuchAlgorithmException | IllegalStateException | UnsupportedEncodingException e) {
+	            logger.debug("Unable to generate token!");
+	            return new ApiResponse(ERROR, "Unable to generate token!");
+	        }
+	}
+	
 	@ApiMapping(value="/register", method=RequestMethod.POST)
 	@Transactional
-	public ApiResponse registration(String data, @Parameters Map<String, String[]> parameters) {
+	public ApiResponse registration(@Parameters Map<String, String[]> parameters) {
 		ApiResponse apiResponse = null;
 		
 		if(	   parameters.get("email") == null 
@@ -98,5 +87,8 @@ public class AuthController extends CoreAuthController {
 		
 		return apiResponse;
 	}
+	
+    public ApiResponse login(@Data String data) {return null;}
+	public ApiResponse registration(String data, @Parameters Map<String, String[]> parameters) {return null;}
 
 }

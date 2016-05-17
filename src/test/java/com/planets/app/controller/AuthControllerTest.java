@@ -151,11 +151,11 @@ public class AuthControllerTest extends AbstractControllerTest {
 
     	testRegister();
     	
-    	Map<String, String> data = new HashMap<String, String>();
-    	data.put("email", TEST_USER_1_EMAIL[0]);
-    	data.put("password", TEST_USER_1_PASSWORD[0]);
+    	Map<String, String[]> parameters = new HashMap<String, String[]>();
+    	parameters.put("email", TEST_USER_1_EMAIL);
+    	parameters.put("password", TEST_USER_1_PASSWORD);
     	
-    	ApiResponse response = authController.login(objectMapper.convertValue(data, JsonNode.class).toString());
+    	ApiResponse response = authController.login(parameters);
     	    	
     	assertEquals(response.getMeta().getMessage(), ApiResponseType.SUCCESS, response.getMeta().getType());
     }
@@ -168,7 +168,7 @@ public class AuthControllerTest extends AbstractControllerTest {
     	parameters.put("email", TEST_USER_1_EMAIL);
     	parameters.put("password", TEST_USER_1_PASSWORD);
     	
-		ApiResponse response = authController.registration("test", parameters);
+		ApiResponse response = authController.registration(parameters);
 		
     	AppUser user = (AppUser) response.getPayload().get("AppUser");
     	
