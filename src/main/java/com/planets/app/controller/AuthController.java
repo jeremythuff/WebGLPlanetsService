@@ -39,13 +39,15 @@ public class AuthController extends CoreAuthController {
 	        AppUser user = appUserRepo.findByEmail(email);
 	        
 	        if(user == null) {
-	            logger.debug("No user found with email " + email + "!");
-	            return new ApiResponse(ERROR, "No user found with email " + email + "!");
+	        	String errorMessage = "No user found with email " + email + "!"; 
+	            logger.debug(errorMessage);
+	            return new ApiResponse(ERROR, errorMessage);
 	        }
 	        
 	        if(!authUtility.validatePassword(password, user.getPassword())) {
-	            logger.debug("Authentication failed!");
-	            return new ApiResponse(ERROR, "Authentication failed!");
+	            String errorMessage = "Authentication failed!"; 
+	            logger.debug(errorMessage);
+	            return new ApiResponse(ERROR, errorMessage);
 	        }
 	        
 	        try {
